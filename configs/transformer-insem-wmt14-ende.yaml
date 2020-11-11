@@ -1,0 +1,67 @@
+data_configs:
+  lang_pair: "en-de"
+  train_data:
+    - "/home/user_data/wengrx/WMT14-DE-EN-clean/train.tok.clean.en"
+    - "/home/user_data/wengrx/WMT14-DE-EN-clean/train.tok.clean.de"
+  valid_data:
+    - "/home/user_data/wengrx/WMT14-DE-EN-clean/newstest2013.tok.en"
+    - "/home/user_data/wengrx/WMT14-DE-EN-clean/newstest2013.tok.de"
+  bleu_valid_reference: "/home/user_data/wengrx/WMT14-DE-EN-clean/newstest2013.de"
+  vocabularies:
+    - type: "bpe"
+      dict_path: "/home/user_data/wengrx/WMT14-DE-EN-clean/vocab.json"
+      codes: "/home/user_data/wengrx/WMT14-DE-EN-clean/bpe.32000"
+      max_n_words: -1
+    - type: "bpe"
+      dict_path: "/home/user_data/wengrx/WMT14-DE-EN-clean/vocab.json"
+      codes: "/home/user_data/wengrx/WMT14-DE-EN-clean/bpe.32000"
+      max_n_words: -1
+  max_len:
+    - 50
+    - 50
+  num_refs: 1
+
+model_configs:
+  model: Transformer
+  n_layers: 6
+  n_head: 8
+  d_word_vec: 256
+  d_model: 256
+  d_inner_hid: 1024
+  dropout: 0.1
+  tie_embedding: true
+  proj_share_weight: true
+  label_smoothing: 0.1
+  criterion: "basic"
+
+optimizer_configs:
+  optimizer: "adam"
+  learning_rate: 0.2
+  grad_clip: -1.0
+  optimizer_params: ~
+  schedule_method: noam
+  scheduler_configs:
+    d_model: 512
+    warmup_steps: 8000
+
+training_configs:
+  max_epochs: 10000000
+  shuffle: true
+  use_bucket: true
+  batch_size: 2400
+  batching_key: "tokens"
+  update_cycle: 10
+  valid_batch_size: 60
+  disp_freq: 500
+  save_freq: 500
+  num_kept_checkpoints: 1
+  loss_valid_freq: 500
+  bleu_valid_freq: 500
+  bleu_valid_batch_size: 60
+  bleu_valid_warmup: 1
+  bleu_valid_configs:
+    max_steps: 150
+    beam_size: 4
+    alpha: 0.6
+    postprocess: True
+  early_stop_patience: 10000000000

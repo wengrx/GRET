@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+export CUDA_VISIBLE_DEVICES=1
+
+N=$1
+Model_Name=$2
+Specific_Name=$3
+
+python3 ../translate.py \
+    --model_name transformer_$2 \
+    --source_path "/home/user_data/wengrx/WMT17-FIEN/newstest$1.tc.bpe.fi" \
+    --model_path "../save/$2_$3/transformer_$2.best.tpz" \
+    --config_path "../configs/transformer_$2_config.yaml" \
+    --specific_path "../configs/$3.yaml" \
+    --batch_size 1 \
+    --beam_size 5 \
+    --save_path "../result/$2_$3/$2_$3.newstest$1.txt" \
+    --source_bpe_codes "" \
+    --use_gpu
+
+perl ../tools/multi-bleu.perl -lc /home/user_data/wengrx/WMT17-FIEN/newstest$1.tc.en < ../result/$2_$3/$2_$3.newstest$1.txt.0
